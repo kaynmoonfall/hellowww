@@ -13,29 +13,44 @@
             width: 100vw;
             font-family: 'Courier New', Courier, monospace;
             overflow: hidden;
-            transition: background 0.4s ease;
+            transition: background 0.5s ease;
             position: relative;
         }
 
-        /* Lignes de vitesse (Effet Dash Jett) */
-        .speed-line {
+        /* Étoiles en fond */
+        .star {
             position: absolute;
-            background: rgba(255, 255, 255, 0.8);
-            width: 3px;
-            height: 100px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: twinkle 2s infinite ease-in-out;
             pointer-events: none;
-            z-index: 10;
         }
 
-        /* Le Notebook Carré */
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.2); }
+        }
+
+        /* Lignes de Dash Jett améliorées */
+        .speed-line {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            width: 2px;
+            pointer-events: none;
+            z-index: 10;
+            border-radius: 10px;
+        }
+
+        /* Le Bloc Papier */
         #sheet {
             position: absolute;
-            background-color: #fdf6e3; /* Beige papier */
+            background-color: #fdf6e3;
             background-image: 
-                linear-gradient(90deg, transparent 39px, #ab8d77 39px, #ab8d77 41px, transparent 41px), /* Ligne verticale */
-                linear-gradient(#e1e1e1 1px, transparent 1px); /* Lignes horizontales */
+                linear-gradient(90deg, transparent 39px, #ab8d77 39px, #ab8d77 41px, transparent 41px),
+                linear-gradient(#e1e1e1 1px, transparent 1px);
             background-size: 100% 1.5rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -43,15 +58,15 @@
             box-sizing: border-box;
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.15, 0.85, 0.35, 1.2);
+            transition: all 0.3s cubic-bezier(0.15, 0.85, 0.35, 1.2);
             user-select: none;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             border: 1px solid #dcdcdc;
+            border-radius: 15px; /* Bords arrondis */
             z-index: 5;
-            width: 250px; /* Taille fixe carrée */
-            height: 250px;
+            -webkit-tap-highlight-color: transparent;
         }
 
         #message {
@@ -60,10 +75,6 @@
             font-weight: bold;
             pointer-events: none;
             word-wrap: break-word;
-        }
-
-        .active-click {
-            transform: scale(0.8) !important;
         }
 
         .heart {
@@ -77,7 +88,7 @@
 </head>
 <body>
 
-    <div id="sheet">
+    <div id="sheet" style="width: 260px; height: 260px;">
         <div id="message">Hi chellam j'ai un petit qqchose pour toi, ouvre moi</div>
     </div>
 
@@ -87,88 +98,91 @@
         const text = document.getElementById('message');
         const body = document.body;
 
+        // Création des étoiles au chargement
+        for(let i=0; i<30; i++) {
+            let star = document.createElement('div');
+            star.className = 'star';
+            star.style.width = Math.random() * 4 + 'px';
+            star.style.height = star.style.width;
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.top = Math.random() * 100 + 'vh';
+            star.style.animationDelay = Math.random() * 2 + 's';
+            body.appendChild(star);
+        }
+
         const messages = [
-            "Oups encore pattu kuttyyy",
-            "nan nan nan toujours pas",
-            "Hmmm le prochain maybe ?",
-            "héhé je t'ai encore eu, c'est le vrai lui maintenant vas-y !",
-            "oh non c'est parti où ????",
-            "baby baby ohhhh",
-            "mais ouvre moiii j'attendss là",
-            "maan kuttiyeee",
-            "pulli maan kuttiyeee",
-            "c'est bon pardon j'arrete",
-            "ou PAS behhhh",
-            "chérie en faite ce que je voulais te dire c'est ça :",
-            "?? ?????? ?",
-            "oula ya eu un beug ?",
-            "alo la terre ? ici la lune",
-            "Mais bordel laissez ma femme voir mon messageeeee",
-            "Un deux un deux vous me recevez ?",
-            "AHH c bon ca marche",
-            "je crois ?",
-            "JE RIGOLEEEE",
-            "Okok pardon je t'ai enervé mais c'est la dernière",
-            "ou pas ?",
-            "HAHAHAHHA naan je rigole",
-            "allez tiensss :"
+            "Oups encore pattu kuttyyy", "nan nan nan toujours pas", "Hmmm le prochain maybe ?",
+            "héhé je t'ai encore eu !", "oh non c'est parti où ????", "baby baby ohhhh",
+            "mais ouvre moiii j'attendss là", "maan kuttiyeee", "pulli maan kuttiyeee",
+            "c'est bon pardon j'arrete", "ou PAS behhhh", "chérie en fait...",
+            "?? ?????? ?", "oula ya eu un beug ?", "alo la terre ? ici la lune",
+            "Mais laissez ma femme voir !", "Un deux un deux...", "AHH c bon ca marche",
+            "je crois ?", "JE RIGOLEEEE", "C'est la dernière promis",
+            "ou pas ?", "HAHAHAHHA nan", "allez tiensss :"
         ];
 
-        const finalMessage = "JE T'AIME MA FEMME, MA REINE, MON AMOUR, MA VIE ENTIERE. Je suis amoureux de toi + que tout je veux te marier et avoir des enfants avec toi et vivre heureux jusqu'a la fin de ma vie ❤️";
+        const finalMessage = "JE T'AIME MA FEMME, MA REINE, MON AMOUR, MA VIE ENTIERE. ❤️";
+        const gradients = ["#ff9a9e", "#a1c4fd", "#fccb90", "#84fab0", "#f093fb", "#d4fc79"];
 
-        const gradients = ["#ff9a9e", "#a1c4fd", "#fccb90", "#84fab0", "#e2ebf0", "#f093fb", "#d4fc79"];
-
-        function createSpeedLines() {
-            for (let i = 0; i < 12; i++) {
+        function dashEffect(oldX, oldY, newX, newY) {
+            for (let i = 0; i < 8; i++) {
                 const line = document.createElement('div');
                 line.className = 'speed-line';
-                const angle = Math.random() * Math.PI * 2;
-                const dist = 40 + Math.random() * 120;
-                line.style.left = '50%';
-                line.style.top = '50%';
-                line.style.transform = `translate(-50%, -50%) rotate(${angle}rad) translateY(-${dist}px)`;
+                line.style.left = oldX + 'px';
+                line.style.top = oldY + 'px';
+                
+                const angle = Math.atan2(newY - oldY, newX - oldX);
+                line.style.transform = `rotate(${angle}rad)`;
+                
                 body.appendChild(line);
                 line.animate([
-                    { opacity: 0, height: '0px' },
-                    { opacity: 1, height: '120px' },
-                    { opacity: 0, height: '180px' }
-                ], { duration: 300 });
-                setTimeout(() => line.remove(), 300);
+                    { width: '0px', opacity: 1 },
+                    { width: '200px', opacity: 0 }
+                ], { duration: 400, easing: 'ease-out' });
+                setTimeout(() => line.remove(), 400);
             }
         }
 
         function moveSheet() {
-            const size = 250; // On garde le carré
-            const maxX = window.innerWidth - size;
-            const maxY = window.innerHeight - size;
+            const rect = sheet.getBoundingClientRect();
+            const oldX = rect.left + rect.width / 2;
+            const oldY = rect.top + rect.height / 2;
+
+            // Taille aléatoire (entre 180px et 320px)
+            const newSize = Math.floor(Math.random() * (320 - 180 + 1)) + 180;
+            sheet.style.width = newSize + "px";
+            sheet.style.height = newSize + "px";
+
+            const maxX = window.innerWidth - newSize;
+            const maxY = window.innerHeight - newSize;
             const x = Math.max(0, Math.floor(Math.random() * maxX));
             const y = Math.max(0, Math.floor(Math.random() * maxY));
 
             sheet.style.top = y + "px";
             sheet.style.left = x + "px";
-            sheet.style.transform = `rotate(${(Math.random() - 0.5) * 20}deg)`;
+            sheet.style.transform = `rotate(${(Math.random() - 0.5) * 25}deg)`;
+
+            dashEffect(oldX, oldY, x + newSize/2, y + newSize/2);
+
+            // Bouger les étoiles légèrement pour le feeling
+            document.querySelectorAll('.star').forEach(s => {
+                s.style.transform = `translate(${(Math.random()-0.5)*50}px, ${(Math.random()-0.5)*50}px)`;
+            });
         }
 
         sheet.addEventListener('click', () => {
-            createSpeedLines();
-            sheet.classList.add('active-click');
-            setTimeout(() => sheet.classList.remove('active-click'), 100);
-
             if (clicks < messages.length) {
                 text.innerText = messages[clicks];
                 body.style.background = gradients[clicks % gradients.length];
                 moveSheet();
                 clicks++;
             } else {
-                // LE GRAND FINAL
                 body.style.background = "linear-gradient(135deg, #ff0844 0%, #ffb199 100%)";
                 sheet.style.width = "90vw";
                 sheet.style.height = "auto";
-                sheet.style.minHeight = "250px";
                 sheet.style.top = "50%";
                 sheet.style.left = "50%";
                 sheet.style.transform = "translate(-50%, -50%)";
-                sheet.style.borderRadius = "15px";
                 text.innerHTML = `<span class="heart">❤️</span>${finalMessage}`;
                 sheet.onclick = null;
             }
